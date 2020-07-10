@@ -6,14 +6,15 @@ ENV DEBIAN_FRONTEND=noninteractive \
 ENV NODEJS_VERSION=12.15.0 \
     CORDOVA_VERSION=8.1.0 \
     IONIC_VERSION=6.0.1 \
-    ANGULAR_VERSION=9.0.1
+    ANGULAR_VERSION=9.0.1 \
+    GRADLE_VERSION=6.5.1 \
+    ANDROID_BUILD_TOOLS_VERSION=29.0.0 \
+    ANDROID_APIS="android-29"
 
 ENV ANDROID_SDK_URL="https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip" \
-    ANDROID_BUILD_TOOLS_VERSION=29.0.0 \
-    ANDROID_APIS="android-29" \
     ANT_HOME="/usr/share/ant" \
     MAVEN_HOME="/usr/share/maven" \
-    GRADLE_HOME="/usr/share/gradle" \
+    GRADLE_HOME="/usr/share/gradle-$GRADLE_VERSION" \
     ANDROID_HOME="/opt/android"
 
 ARG BUILD_DATE
@@ -35,7 +36,7 @@ RUN buildDeps='software-properties-common'; \
   set -x && \
   apt-get update && apt-get upgrade -y && apt-get install -y $buildDeps --no-install-recommends && \
   apt-get update -y && \
-  apt-get install -y curl git ca-certificates bzip2 openssh-client wget --no-install-recommends
+  apt-get install -y curl git ca-certificates bzip2 openssh-client wget unzip --no-install-recommends
 
 # Java/JDK
 RUN add-apt-repository ppa:openjdk-r/ppa -y && \
@@ -52,7 +53,11 @@ ENV PATH=$PATH:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools:$ANDROID_HOME/bu
 
 RUN dpkg --add-architecture i386
 
-RUN apt-get install -y maven ant gradle
+RUN apt-get install -y maven ant
+
+RUN mkdir $GRADLE_HOME
+RUN wget -P $GRADLE_HOME/.. https://services.gradle.org/distributions/gradle-$GRADLE_VERSION-bin.zip
+RUN unzip -d $GRADLE_HOME/.. $GRADLE_HOME/../gradle-$GRADLE_VERSION-bin.zip
 
 RUN mkdir $ANDROID_HOME && cd $ANDROID_HOME && \
     wget -O android.zip ${ANDROID_SDK_URL} && \
