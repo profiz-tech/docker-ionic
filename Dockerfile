@@ -4,7 +4,6 @@ ENV DEBIAN_FRONTEND=noninteractive \
     TERM=xterm
 
 ENV NODEJS_VERSION=12.15.0 \
-    CORDOVA_VERSION=8.1.0 \
     IONIC_VERSION=6.0.1 \
     ANGULAR_VERSION=9.0.1 \
     GRADLE_VERSION=6.5.1 \
@@ -76,11 +75,6 @@ ENV PATH=$PATH:$NODE_HOME
 # Python
 WORKDIR /tmp
 RUN apt-get install python3-pip -y
-
-# Cordova 
-WORKDIR /tmp
-RUN npm i -g --unsafe-perm cordova@${CORDOVA_VERSION}
-RUN cordova telemetry off
 
 # Ionic
 RUN apt-get install -y && \
