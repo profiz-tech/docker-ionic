@@ -85,6 +85,9 @@ RUN apt-get install -y && \
 RUN npm i -g --unsafe-perm @angular/cli@${ANGULAR_VERSION}
 RUN ng analytics off
 
+# Firebase
+RUN npm i -g firebase-tools
+
 # Clean
 RUN rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
   apt-get autoremove -y && apt-get clean
